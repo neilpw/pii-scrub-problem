@@ -34,7 +34,7 @@ class Scrubber
     elsif input.is_a?(Array)
       input # not yet supported
     elsif input.is_a?(String)
-      input # not yet supported
+      scrub_string(input)
     elsif input.is_a?(Numeric)
       input # not yet supported
     elsif input.is_a?(TrueClass) || input.is_a?(FalseClass)
@@ -46,9 +46,7 @@ class Scrubber
     end
   end
 
-  # Given a Hash, scrub it for sensitive data.
-  #
-  # Does not modify the Hash in-place.
+  # Given a Hash, return a scrubbed copy.
   #
   def scrub_hash(input)
     scrubbed = {}
@@ -63,5 +61,12 @@ class Scrubber
     end
 
     scrubbed
+  end
+
+  # Given a String, return a scrubbed copy (all alphanumeric characters replaced
+  # with asterisks).
+  #
+  def scrub_string(input)
+    input.gsub(/[A-Za-z0-9]/, '*')
   end
 end
