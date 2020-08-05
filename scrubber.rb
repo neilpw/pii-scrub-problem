@@ -30,7 +30,7 @@ class Scrubber
     # that would play nicely with the various Numeric types.
     #
     if input.is_a?(Hash)
-      input # not yet supported
+      scrub_hash(input) # not yet supported
     elsif input.is_a?(Array)
       input # not yet supported
     elsif input.is_a?(String)
@@ -44,5 +44,24 @@ class Scrubber
     else
       raise "Invalid input type: #{input} <#{input.class}>"
     end
+  end
+
+  # Given a Hash, scrub it for sensitive data.
+  #
+  # Does not modify the Hash in-place.
+  #
+  def scrub_hash(input)
+    scrubbed = {}
+
+    input.each do |key, value|
+      scrubbed[key] =
+        if @sensitive_fields.include?(key)
+          scrub_value(value)
+        else
+          value
+        end
+    end
+
+    scrubbed
   end
 end
