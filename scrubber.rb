@@ -33,7 +33,7 @@ class Scrubber
     # that would play nicely with the various Numeric types.
     #
     if input.is_a?(Hash)
-      scrub_hash(input)
+      scrub_hash(input, sensitive: sensitive)
     elsif input.is_a?(Array)
       scrub_array(input, sensitive: sensitive)
     elsif input.is_a?(String)
@@ -51,7 +51,7 @@ class Scrubber
 
   # Given a Hash, return a scrubbed copy.
   #
-  def scrub_hash(input)
+  def scrub_hash(input, sensitive: false)
     scrubbed = {}
 
     input.each do |key, value|
@@ -59,7 +59,7 @@ class Scrubber
         # We always scrub values in sensitive fields, and we engage sensitive
         # mode.
         #
-        if @sensitive_fields.include?(key)
+        if @sensitive_fields.include?(key) || sensitive
           scrub_value(value, sensitive: true)
         #
         # We always need to scrub Hashes and Arrays, in case they contain nested
