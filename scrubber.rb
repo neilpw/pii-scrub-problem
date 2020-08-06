@@ -25,14 +25,17 @@ class Scrubber
 
   # Given any valid JSON type, scrub it for sensitive data.
   #
-  def scrub_value(input)
+  # @param sensitive This value is nested within a sensitive value. Some scrub
+  #                  methods handle that differently.
+  #
+  def scrub_value(input, sensitive: false)
     # It would have been nice to make this a case statement, but I don't think
     # that would play nicely with the various Numeric types.
     #
     if input.is_a?(Hash)
       scrub_hash(input)
     elsif input.is_a?(Array)
-      scrub_array(input)
+      scrub_array(input, sensitive: sensitive)
     elsif input.is_a?(String)
       scrub_string(input)
     elsif input.is_a?(Numeric)
@@ -53,10 +56,16 @@ class Scrubber
 
     input.each do |key, value|
       scrubbed[key] =
+        # We always scrub values in sensitive fields, and we engage sensitive
+        # mode.
         #
-        # We always need to scrub Hashes, in case they contain sensitive fields.
+        if @sensitive_fields.include?(key)
+          scrub_value(value, sensitive: true)
         #
-        if @sensitive_fields.include?(key) || value.is_a?(Hash)
+        # We always need to scrub Hashes and Arrays, in case they contain nested
+        # objects with sensitive fields.
+        #
+        elsif value.is_a?(Hash) || value.is_a?(Array)
           scrub_value(value)
         else
           value
@@ -68,8 +77,14 @@ class Scrubber
 
   # Given an Array, return a scrubbed copy.
   #
-  def scrub_array(array)
-    array.map { |value| scrub_value(value) }
+  def scrub_array(array, sensitive: false)
+    array.map do |value|
+      if sensitive || value.is_a?(Hash)
+        scrub_value(value)
+      else
+        value
+      end
+    end
   end
 
   # Given a String, return a scrubbed copy (all alphanumeric characters replaced
