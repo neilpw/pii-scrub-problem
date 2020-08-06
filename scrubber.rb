@@ -36,7 +36,7 @@ class Scrubber
     elsif input.is_a?(String)
       scrub_string(input)
     elsif input.is_a?(Numeric)
-      input # not yet supported
+      scrub_numeric(input)
     elsif boolean?(input)
       scrub_boolean(input)
     elsif input.is_a?(NilClass)
@@ -74,6 +74,12 @@ class Scrubber
   #
   def scrub_string(input)
     input.gsub(/[A-Za-z0-9]/, '*')
+  end
+
+  # Given a Numeric value, return a sanitized copy.
+  #
+  def scrub_numeric(input)
+    scrub_string(input.to_s)
   end
 
   # Given a Boolean (i.e. true or false), return a single-dash string.
