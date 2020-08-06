@@ -79,7 +79,9 @@ class Scrubber
   #
   def scrub_array(array, sensitive: false)
     array.map do |value|
-      if sensitive || value.is_a?(Hash)
+      if sensitive
+        scrub_value(value, sensitive: true)
+      elsif value.is_a?(Hash) || value.is_a?(Array)
         scrub_value(value)
       else
         value
