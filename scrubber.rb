@@ -32,7 +32,7 @@ class Scrubber
     if input.is_a?(Hash)
       scrub_hash(input)
     elsif input.is_a?(Array)
-      input # not yet supported
+      scrub_array(input)
     elsif input.is_a?(String)
       scrub_string(input)
     elsif input.is_a?(Numeric)
@@ -61,6 +61,12 @@ class Scrubber
     end
 
     scrubbed
+  end
+
+  # Given an Array, return a scrubbed copy.
+  #
+  def scrub_array(array)
+    array.map { |value| scrub_value(value) }
   end
 
   # Given a String, return a scrubbed copy (all alphanumeric characters replaced
