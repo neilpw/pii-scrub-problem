@@ -43,7 +43,7 @@ class Scrubber
     elsif boolean?(input)
       scrub_boolean(input)
     elsif input.is_a?(NilClass)
-      input # not yet supported
+      input
     else
       raise "Invalid input type: #{input} <#{input.class}>"
     end
