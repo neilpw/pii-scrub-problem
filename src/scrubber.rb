@@ -104,7 +104,7 @@ class Scrubber
 
   # Given a Boolean (i.e. true or false), return a single-dash string.
   #
-  def scrub_boolean(input)
+  def scrub_boolean(_input)
     '-'
   end
 
