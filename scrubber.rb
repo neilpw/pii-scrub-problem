@@ -53,7 +53,10 @@ class Scrubber
 
     input.each do |key, value|
       scrubbed[key] =
-        if @sensitive_fields.include?(key)
+        #
+        # We always need to scrub Hashes, in case they contain sensitive fields.
+        #
+        if @sensitive_fields.include?(key) || value.is_a?(Hash)
           scrub_value(value)
         else
           value
