@@ -30,7 +30,7 @@ class Scrubber
     # that would play nicely with the various Numeric types.
     #
     if input.is_a?(Hash)
-      scrub_hash(input) # not yet supported
+      scrub_hash(input)
     elsif input.is_a?(Array)
       input # not yet supported
     elsif input.is_a?(String)
