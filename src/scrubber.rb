@@ -16,6 +16,13 @@ class Scrubber
   # 3. Serialize the Hash back to JSON.
   #
   def scrub(input)
+    # We could rescue Oj::ParseError here, returning input, or nil, or something
+    # else.
+    #
+    # However, I'd rather have this code fail hard when supplied invalid input,
+    # and avoid making assumptions about what might be desirable error-handling
+    # behavior for the calling code.
+    #
     parsed = Oj.load(input)
 
     scrubbed = scrub_value(parsed)
