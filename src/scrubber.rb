@@ -52,9 +52,7 @@ class Scrubber
   # Given a Hash, return a scrubbed copy.
   #
   def scrub_hash(input, sensitive: false)
-    scrubbed = {}
-
-    input.each do |key, value|
+    input.each_with_object({}) do |(key, value), scrubbed|
       scrubbed[key] =
         # We always scrub values in sensitive fields, and we engage sensitive
         # mode.
@@ -71,8 +69,6 @@ class Scrubber
           value
         end
     end
-
-    scrubbed
   end
 
   # Given an Array, return a scrubbed copy.
